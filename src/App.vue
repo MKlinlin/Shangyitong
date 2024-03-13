@@ -6,6 +6,7 @@
     <div class="content">
       xxxxxx
     </div>
+    <HospitalBottom />
   </div>
 </template>
 
