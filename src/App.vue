@@ -4,7 +4,7 @@
     <HospitalTop />
     <!-- 医院信息 -->
     <div class="content">
-      xxxxxx
+     <router-view></router-view>
     </div>
     <HospitalBottom />
   </div>
@@ -24,7 +24,6 @@
     margin-top: 70px;
     width: 1300px;
     min-height: 700px;
-    background-color: red;
   }
 }
 
