@@ -1,13 +1,16 @@
 <template>
-  <div>adfasd</div>
+  <div>
+    <!-- 首页轮播图 -->
+    <Carousel />
+    <!-- 搜索区 -->
+    <Search />
+  </div>
 </template>
 
-<script>
-export default {
-
-}
+<script setup lang="ts">
+import Carousel from "./carousel/index.vue";
+import Search from "./search/index.vue";
 </script>
 
-<style>
-
+<style lang="scss" scoped>
 </style>
