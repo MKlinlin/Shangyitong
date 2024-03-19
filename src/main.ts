@@ -4,6 +4,8 @@ import '@/style/reset.scss'
 import router from './router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+//@ts-ignore
+import { zhCn } from 'element-plus/es/locales.mjs'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 //引入全局组件
 import HospitalTop from '@/components/hospital_top/index.vue'
@@ -17,6 +19,8 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
   }
 app.use(router)
-app.use(ElementPlus)
+app.use(ElementPlus,{
+    locale: zhCn
+})
 //挂载
 app.mount('#app')
