@@ -2,7 +2,7 @@
   <el-card class="box-card" shadow="hover">
     <div class="content">
       <div class="left">
-        <div class="name">北京第一人民医院</div>
+        <div class="name">{{hospitalInfo.hosname}}</div>
         <div class="tip">
           <div class="level">
             <svg
@@ -21,7 +21,7 @@
                 p-id="3526"
               ></path>
             </svg>
-            <span>三级甲等</span>
+            <span>{{hospitalInfo.param.hostypeString}}</span>
           </div>
           <div class="time">
             <svg
@@ -40,18 +40,21 @@
                 p-id="4805"
               ></path>
             </svg>
-            <span>2023</span>
+            <span>每天{{hospitalInfo.bookingRule?.releaseTime}}放号</span>
           </div>
         </div>
       </div>
       <div class="right">
-        <img src="../../../assets/images/logo.png" alt="" />
+        <img :src="`data:image/jpeg;base64,${hospitalInfo.logoData}`" alt="" />
       </div>
     </div>
   </el-card>
 </template>
 
 <script setup lang="ts">
+//接受父组件传来的props
+
+defineProps(["hospitalInfo"]);
 </script>
 
 <style scoped lang="scss">
@@ -79,8 +82,8 @@
   }
   .right {
     img {
-      width: 50px;
-      height: 50px;
+      width: 70px;
+      height: 70px;
     }
   }
 }
