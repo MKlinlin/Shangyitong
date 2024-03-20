@@ -1,5 +1,5 @@
 <template>
-  <el-card class="box-card" shadow="hover">
+  <el-card class="box-card" shadow="hover" @click="goDetail">
     <div class="content">
       <div class="left">
         <div class="name">{{hospitalInfo.hosname}}</div>
@@ -53,8 +53,13 @@
 
 <script setup lang="ts">
 //接受父组件传来的props
-
+import { useRouter } from 'vue-router';
+let $router = useRouter();
 defineProps(["hospitalInfo"]);
+const goDetail = () => {
+  //跳转到医院详情页面，将来将携带参数
+  $router.push({path: "/hospital",});
+};
 </script>
 
 <style scoped lang="scss">

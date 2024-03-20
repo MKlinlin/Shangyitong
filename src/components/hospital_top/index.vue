@@ -2,7 +2,7 @@
     <div class="top">
         <div class="content">
             <!-- 左侧 -->
-            <div class="left">
+            <div class="left" @click="goDetail">
                 <img src="../../assets/images/logo.png" alt="">
                 <p>尚医通 预约挂号统一平台</p>
             </div>
@@ -14,13 +14,16 @@
     </div>
 </template>
 
-<script>
-export default {
-
-}
+<script setup lang="ts">
+import { useRouter } from 'vue-router';
+let $router = useRouter();
+const goDetail = () => {
+  //跳转到医院详情页面，将来将携带参数
+  $router.push({path: "/home",});
+};
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .top{
 position:fixed;
 z-index: 99;
@@ -40,6 +43,7 @@ justify-content: center;
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
         img{
             width: 50px;
             height: 50px;
