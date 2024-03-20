@@ -4,16 +4,34 @@
     <div class="content">
         <div class="left">等级:</div>
         <ul class="hospital">
-            <li class="active">全部</li>
-            <li>三级甲等</li>
-            <li>三级乙等</li>
-            <li>二级甲等</li>
+            <li :class="{active:activeFlag==''}" @click="changeLevel('')">全部</li>
+            <li v-for="level in levelArr" :key="level.value" :class="{active:activeFlag==level.value}" @click="changeLevel(level.value)">{{level.name}}</li>
         </ul>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { reqHospitalLevelAndRegion } from '@/api/home';
+import { ref, onMounted } from 'vue';
+import type { HospitalLevelAndRegionArr, HospitalLevelAndRegionResponseData } from '@/api/home/type';
+
+let levelArr= ref<HospitalLevelAndRegionArr>([]);
+let activeFlag= ref<string>('');
+onMounted(() => {
+    getlevel();
+});
+
+const getlevel = async () => {
+    const res: HospitalLevelAndRegionResponseData = await reqHospitalLevelAndRegion('HosType');
+    if (res.code === 200) {
+        levelArr.value = res.data;
+    };
+};
+
+const changeLevel = (level: string) => {
+    activeFlag.value = level;
+};
 </script>
 
 <style lang="scss" scoped>

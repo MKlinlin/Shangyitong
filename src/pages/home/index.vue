@@ -46,7 +46,6 @@ let total=ref<number>(0);
 
 const getHospitalInfo= async()=>{
   let result:HospitalResponseData = await reqHospital(pageNo.value,pageSize.value)
-  console.log(result);
   
   if(result.code===200){
     hasHosArr.value=result.data.content;
