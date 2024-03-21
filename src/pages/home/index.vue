@@ -28,7 +28,9 @@
           @size-change="sizeChange"
         />
       </el-col>
-      <el-col :span="4"> 123 </el-col>
+      <el-col :span="4">
+        <Tip />
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -39,6 +41,7 @@ import Search from "./search/index.vue";
 import Level from "./level/index.vue";
 import Region from "./region/index.vue";
 import Card from "./card/index.vue";
+import Tip from "./tip/index.vue";
 import type { Content, HospitalResponseData } from "@/api/home/type";
 import { reqHospital } from "@/api/home";
 import { onMounted, ref } from "vue";
