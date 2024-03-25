@@ -36,7 +36,7 @@ export interface HosPitalDetail {
         route: string,
         status: number,
         bookingRule: null
-    }
+    } 
 }
 
 //医院详情返回数据ts
