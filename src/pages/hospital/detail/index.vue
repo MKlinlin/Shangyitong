@@ -40,7 +40,8 @@
     </div>
     <div class="intro">
       <h1>医院介绍</h1>
-      <p>{{hospitalStore.hospitalInfo?.hospital?.intro}}</p>
+      <p v-if="hospitalStore.hospitalInfo?.hospital?.intro">{{hospitalStore.hospitalInfo?.hospital?.intro}}</p>
+      <el-empty description="暂无数据" v-else />
     </div>
   </div>
 </template>
@@ -73,8 +74,9 @@ let hospitalStore = useDetailStore();
       height: 80px;
       border-radius: 50%;
       img{
-        width: 100%;
-        height: 100%;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
       }
     }
     .right{
