@@ -2,7 +2,7 @@
   <div class="register">
     <div class="top">
       <div class="title">
-        {{hospitalStore.hospitalInfo?.hospital?.hosname}}
+        {{ hospitalStore.hospitalInfo?.hospital?.hosname }}
       </div>
       <div class="level">
         <svg
@@ -21,30 +21,76 @@
             p-id="4363"
           ></path>
         </svg>
-        <span>{{hospitalStore.hospitalInfo?.hospital?.param.hostypeString}}</span>
+        <span>{{
+          hospitalStore.hospitalInfo?.hospital?.param.hostypeString
+        }}</span>
       </div>
     </div>
     <div class="content">
       <div class="left">
-        <img :src="`data:image/jpeg;base64,` + hospitalStore.hospitalInfo?.hospital?.logoData" alt="">
+        <img
+          :src="
+            `data:image/jpeg;base64,` +
+            hospitalStore.hospitalInfo?.hospital?.logoData
+          "
+          alt=""
+        />
       </div>
       <div class="right">
         <div>挂号规则</div>
         <div class="time">
-          预约周期:10天    放号时间:{{ hospitalStore.hospitalInfo?.bookingRule?.releaseTime }}  停挂时间:{{hospitalStore.hospitalInfo?.bookingRule?.stopTime}}
+          预约周期:10天 放号时间:{{
+            hospitalStore.hospitalInfo?.bookingRule?.releaseTime
+          }}
+          停挂时间:{{ hospitalStore.hospitalInfo?.bookingRule?.stopTime }}
         </div>
         <div class="address">
-          具体位置:{{hospitalStore.hospitalInfo?.hospital?.param.fullAddress}}
+          具体位置:{{ hospitalStore.hospitalInfo?.hospital?.param.fullAddress }}
         </div>
         <div class="rule">
-          具体路线:{{ hospitalStore.hospitalInfo?.hospital?.route}}
+          具体路线:{{ hospitalStore.hospitalInfo?.hospital?.route }}
         </div>
         <div class="release">
-          退号时间:就诊前一工作日{{ hospitalStore.hospitalInfo?.bookingRule?.quitTime }}前取消
+          退号时间:就诊前一工作日{{
+            hospitalStore.hospitalInfo?.bookingRule?.quitTime
+          }}前取消
         </div>
         <div class="rules">预约挂号规则</div>
-        <div class="ruleInfo" v-for="(item,index) in hospitalStore.hospitalInfo?.bookingRule?.rule" :key="index">
+        <div
+          class="ruleInfo"
+          v-for="(item, index) in hospitalStore.hospitalInfo?.bookingRule?.rule"
+          :key="index"
+        >
           {{ item }}
+        </div>
+      </div>
+    </div>
+    <div class="department">
+      <div class="leftNav">
+        <ul>
+          <li
+          @click="changeIndex(index)"
+          v-for="(department, index) in hospitalStore.departmentArr"
+          :key="department.depcode"
+          :class="{ active: index == currentIndex }"
+        >
+            {{ department.depname }}
+          </li>
+        </ul>
+      </div>
+      <div class="departmentInfo">
+        <div
+          class="showDepartment"
+          v-for="department in hospitalStore.departmentArr"
+          :key="department.depcode"
+        >
+          <h1 class="cur">{{ department.depname }}</h1>
+          <!-- 每一个大科室下的小科室 -->
+          <ul>
+            <li v-for="item in department.children" :key="item.depcode">
+              {{ item.depname }}
+            </li>
+          </ul>
         </div>
       </div>
     </div>
@@ -52,45 +98,116 @@
 </template>
 
 <script setup lang="ts">
-import useDetailStore from '@/store/modules/hospitalDetail';
+import useDetailStore from "@/store/modules/hospitalDetail";
+import { ref } from "vue";
 let hospitalStore = useDetailStore();
+
+let currentIndex = ref<number>(0);
+
+const changeIndex = (index: number) => {
+  currentIndex.value = index;
+  //点击导航获取右侧科室标题
+  let all =document.querySelectorAll('.cur')
+  all[currentIndex.value].scrollIntoView(
+    {
+      behavior: 'smooth', //平滑滚动 smooth  instant
+      block: 'start' //滚动到的位置 start  center  end  nearest
+    }
+  )
+};
 </script>
 
 <style scoped lang="scss">
-.register{
-  .top{
+.register {
+  .top {
     display: flex;
-    .title{
+    .title {
       font-size: 28px;
     }
-    .level{
-      color:#7f7f7f;
+    .level {
+      color: #7f7f7f;
       margin-left: 10px;
-      height:40px;
+      height: 40px;
       text-align: center;
       line-height: 40px;
     }
   }
-  .content{
+  .content {
     margin-top: 20px;
     display: flex;
-    .left{
+    .left {
       width: 80px;
       margin-right: 40px;
-      img{
+      img {
         width: 80px;
         height: 80px;
         border-radius: 50%;
       }
     }
-    .right{
+    .right {
       flex: 1;
-      .time,.address,.rule,.release,.ruleInfo{
+      .time,
+      .address,
+      .rule,
+      .release,
+      .ruleInfo {
         margin-top: 10px;
-        color:#7f7f7f;
+        color: #7f7f7f;
       }
-      .rules{
+      .rules {
         margin: 10px 0;
+      }
+    }
+  }
+  .department {
+    width: 100%;
+    height: 500px;
+    margin-top: 20px;
+    display: flex;
+
+    .leftNav {
+      width: 80px;
+      height: 100%;
+      ul {
+        width: 1005;
+        height: 100%;
+        background-color: (248, 248, 248);
+        display: flex;
+        flex-direction: column;
+        li {
+          flex: 1;
+          text-align: center;
+          color: #7f7f7f;
+          font-size: 14px;
+          line-height: 30px;
+          &.active {
+            border-left: 1px solid red;
+            background-color: white;
+          }
+        }
+      }
+    }
+    .departmentInfo {
+      flex: 1;
+      margin-left: 10px;
+      height: 100%;
+      overflow: auto;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      .showDepartment {
+        h1 {
+          background-color: rgb(248, 248, 248);
+        }
+        ul {
+          display: flex;
+          flex-wrap: wrap;
+          li {
+            width: 33%;
+            color: #7f7f7f;
+            margin: 10px 0;
+          }
+        }
       }
     }
   }

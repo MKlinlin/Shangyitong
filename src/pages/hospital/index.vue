@@ -51,7 +51,9 @@ function changeActive(path: string) {
   $router.push(path)
 }
 onMounted(()=>{
-  detailStore.getHospital($route.query.hoscode)
+  detailStore.getHospital($route.query.hoscode as string)
+  //获取某一个医院科室的数据
+  detailStore.getDepartment($route.query.hoscode as string)
 })
 </script>
 

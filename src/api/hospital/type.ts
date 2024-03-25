@@ -46,17 +46,17 @@ export interface HospitalDetail extends ResponseData {
 
 
 //代表医院科室的数据
-export interface Deparment {
+export interface Department {
     depcode: string,
     depname: string,
-    children?: Deparment[]
+    children?: Department[]
 }
 
 //代表存储科室数组类型
-export type DeparmentArr = Deparment[];
+export type DepartmentArr = Department[];
 //获取科室接口返回的数据类型
 export interface DeparmentResponseData extends ResponseData {
-    data: DeparmentArr
+    data: DepartmentArr
 }
 
 //用户登录接口需要携带参数类型
