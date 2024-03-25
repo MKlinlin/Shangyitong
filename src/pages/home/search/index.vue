@@ -35,7 +35,7 @@ let showData = res.data.map(item=>{
 };
 const goDetail = (item:any) => {
   //跳转到医院详情页面，将来将携带参数
-  $router.push({path: "/hospital",});
+  $router.push({path: "/hospital/register",});
 };
 </script>
 
