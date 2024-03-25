@@ -55,10 +55,10 @@
 //接受父组件传来的props
 import { useRouter } from 'vue-router';
 let $router = useRouter();
-defineProps(["hospitalInfo"]);
+let props = defineProps(["hospitalInfo"]);
 const goDetail = () => {
   //跳转到医院详情页面，将来将携带参数
-  $router.push({path: "/hospital",});
+  $router.push({path: "/hospital/register",query: {hoscode: props.hospitalInfo.hoscode},});
 };
 </script>
 

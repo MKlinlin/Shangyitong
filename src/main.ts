@@ -4,6 +4,7 @@ import '@/style/reset.scss'
 import router from './router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import pinia from '@/store'
 //@ts-ignore
 import { zhCn } from 'element-plus/es/locales.mjs'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
@@ -22,5 +23,6 @@ app.use(router)
 app.use(ElementPlus,{
     locale: zhCn
 })
+app.use(pinia)
 //挂载
 app.mount('#app')

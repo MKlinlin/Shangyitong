@@ -41,12 +41,18 @@
 
 <script setup lang="ts">
 import {useRouter,useRoute} from 'vue-router'
+import {onMounted} from 'vue'
+import useDetailStore from '@/store/modules/hospitalDetail'
 
+let detailStore = useDetailStore()
 let $router = useRouter()
 let $route = useRoute()
 function changeActive(path: string) {
   $router.push(path)
 }
+onMounted(()=>{
+  detailStore.getHospital($route.query.hoscode)
+})
 </script>
 
 <style scoped lang="scss">
