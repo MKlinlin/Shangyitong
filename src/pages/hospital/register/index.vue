@@ -87,7 +87,7 @@
           <h1 class="cur">{{ department.depname }}</h1>
           <!-- 每一个大科室下的小科室 -->
           <ul>
-            <li v-for="item in department.children" :key="item.depcode">
+            <li @click="showLogin" v-for="item in department.children" :key="item.depcode">
               {{ item.depname }}
             </li>
           </ul>
@@ -99,10 +99,12 @@
 
 <script setup lang="ts">
 import useDetailStore from "@/store/modules/hospitalDetail";
+import useUserStore from "@/store/modules/user";
 import { ref } from "vue";
 let hospitalStore = useDetailStore();
-
 let currentIndex = ref<number>(0);
+
+let userStore = useUserStore();
 
 const changeIndex = (index: number) => {
   currentIndex.value = index;
@@ -114,6 +116,15 @@ const changeIndex = (index: number) => {
       block: 'start' //滚动到的位置 start  center  end  nearest
     }
   )
+};
+
+const showLogin = () => {
+  
+  if (userStore.visiable) {
+    userStore.visiable = false;
+  }else {
+    userStore.visiable = true;
+  }
 };
 </script>
 
@@ -196,6 +207,7 @@ const changeIndex = (index: number) => {
         display: none;
       }
       .showDepartment {
+        text-align: center;
         h1 {
           background-color: rgb(248, 248, 248);
         }
@@ -206,6 +218,7 @@ const changeIndex = (index: number) => {
             width: 33%;
             color: #7f7f7f;
             margin: 10px 0;
+            cursor: pointer;
           }
         }
       }

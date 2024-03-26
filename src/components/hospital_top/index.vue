@@ -8,7 +8,7 @@
             </div>
             <div class="right">
                 <p class="help">帮助中心</p>
-                <p class="login">登录/注册</p>
+                <p class="login" @click="login">登录/注册</p>
             </div>
         </div>
     </div>
@@ -16,11 +16,23 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
+import useUserStore from '@/store/modules/user';
+let userStore = useUserStore();
 let $router = useRouter();
 const goDetail = () => {
   //跳转到医院详情页面，将来将携带参数
   $router.push({path: "/home",});
 };
+
+const login = () => {
+  
+  if (userStore.visiable) {
+    userStore.visiable = false;
+  }else {
+    userStore.visiable = true;
+  }
+};
+
 </script>
 
 <style scoped lang="scss">
@@ -62,6 +74,9 @@ justify-content: center;
         font-size: 12px;
         .help{
             margin-right:10px
+        }
+        .login{
+            cursor: pointer;
         }
     }
 }

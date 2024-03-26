@@ -11,11 +11,13 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 //引入全局组件
 import HospitalTop from '@/components/hospital_top/index.vue'
 import HospitalBottom from '@/components/hospital_bottom/index.vue'
+import Login from '@/components/login/index.vue'
 
 const app = createApp(App)
 
 app.component('HospitalTop', HospitalTop)
 app.component('HospitalBottom', HospitalBottom)
+app.component('Login', Login)
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     app.component(key, component)
   }
