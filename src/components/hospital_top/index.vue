@@ -21,7 +21,7 @@
                         <el-dropdown-item>实名认证</el-dropdown-item>
                         <el-dropdown-item>挂号订单</el-dropdown-item>
                         <el-dropdown-item>就诊人管理</el-dropdown-item>
-                        <el-dropdown-item>退出登录</el-dropdown-item>
+                        <el-dropdown-item @click="logOut">退出登录</el-dropdown-item>
                       </el-dropdown-menu>
                     </template>
                   </el-dropdown>
@@ -49,6 +49,11 @@ const login = () => {
   }
 };
 
+const logOut = () => {
+  //通知pinia清除用户数据
+  userStore.userLogout();
+  $router.push({path: "/home",});
+};
 </script>
 
 <style scoped lang="scss">

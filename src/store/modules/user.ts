@@ -36,10 +36,15 @@ const useUserStore = defineStore('User', {
                 return Promise.reject(new Error('登录失败'))
             }
         },
-        getters: {
-
+        //用户退出登录方法
+        userLogout() {
+            this.userInfo = {} as UserInfo
+            localStorage.removeItem('User')
         }
     },
+    getters: {
+
+    }
    
 })
 
