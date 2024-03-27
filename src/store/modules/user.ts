@@ -12,6 +12,9 @@ const useUserStore = defineStore('User', {
             userInfo: ({} as UserInfo) //用户信息
         }
     },
+    persist:{
+        enabled:true,
+    },
     actions: {
         //获取验证码方法
         async getCode(phone: string) {
@@ -29,14 +32,15 @@ const useUserStore = defineStore('User', {
             if (res.code === 200) {
                 this.userInfo = res.data
                 return 'ok'
-            }else{
+            } else {
                 return Promise.reject(new Error('登录失败'))
             }
         },
         getters: {
 
         }
-    }
+    },
+   
 })
 
 
