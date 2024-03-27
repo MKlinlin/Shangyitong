@@ -7,15 +7,15 @@
         <el-col :span="12">
           <div class="login">
             <div v-show="scene === 0">
-              <el-form>
-                <el-form-item label="用户名">
+              <el-form :model="loginParams" :rules="rule" ref="form">
+                <el-form-item prop="phone" label="手机号">
                   <el-input
                     placeholder="请输入手机号"
                     :prefix-icon="User"
                     v-model="loginParams.phone"
                   ></el-input>
                 </el-form-item>
-                <el-form-item label="验证码">
+                <el-form-item prop="code" label="验证码">
                   <el-input
                     placeholder="请输入验证码"
                     :prefix-icon="Lock"
@@ -37,7 +37,9 @@
                 style="width: 100%"
                 size="default"
                 @click="login"
-                :disabled="!isPhone || loginParams.code.length<6 ? true : false"
+                :disabled="
+                  !isPhone || loginParams.code.length < 6 ? true : false
+                "
               >
                 登录
               </el-button>
@@ -135,11 +137,12 @@
 import { User, Lock } from "@element-plus/icons-vue";
 import useUserStore from "@/store/modules/user";
 import { ref, reactive, computed } from "vue";
-import { ElMessage } from 'element-plus';
+import { ElMessage } from "element-plus";
+
 let userStore = useUserStore();
 let time = ref<number>(5);
 let flag = ref<boolean>(false);
-  const getCode = async () => {
+const getCode = async () => {
   flag.value = true;
   setInterval(() => {
     time.value--;
@@ -170,20 +173,45 @@ let scene = ref<number>(0); //0代表手机号登录，1代表扫码登录
 const changeScene = () => {
   scene.value === 0 ? (scene.value = 1) : (scene.value = 0);
 };
+
+let form = ref<any>();
 //点击登录
 const login = async () => {
+  await form.value.validate();
+
   try {
     //登录成功
     await userStore.userLogin(loginParams);
     userStore.visiable = false;
   } catch (error) {
     ElMessage({
-      type:'error',
-      message:(error as Error).message
-    })
+      type: "error",
+      message: (error as Error).message,
+    });
+  }
+};
+//自定义校验规则
+const validatorPhone = (_rule: any, value: any, callback: any) => {
+  const reg =
+    /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
+  if (reg.test(value)) {
+    callback();
+  } else {
+    callback(new Error("请输入正确的手机号"));
+  }
+};
+const validatorCode = (_rule: any, value: any, callback: any) => {
+  if (/^\d{6}$/.test(value)) {
+    callback();
+  } else {
+    callback(new Error("请输入正确的验证码"));
   }
 };
 
+const rule = {
+  phone: [{ trigger: "change", validator: validatorPhone }],
+  code: [{ trigger: "change", validator: validatorCode }],
+};
 </script>
 
 <script lang="ts">
