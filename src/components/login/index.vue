@@ -18,20 +18,24 @@
                 <el-form-item label="验证码">
                   <el-input
                     placeholder="请输入验证码"
-                    :prefix-icon="Lock" v-model="loginParams.code"
+                    :prefix-icon="Lock"
+                    v-model="loginParams.code"
                   ></el-input>
                 </el-form-item>
                 <el-form-item>
                   <el-button
-                    :disabled="!isPhone ? true : false"
+                    :disabled="!isPhone||flag ? true : false"
                     @click="getCode"
-                    >获取验证码</el-button
                   >
+                  <span v-if="flag">获取验证码({{ time }})</span>
+                  <span v-else>获取验证码</span>
+                  
+                    </el-button>
                 </el-form-item>
               </el-form>
               <el-button type="primary" style="width: 100%" size="default"
-                >登录</el-button
-              >
+                >登录
+              </el-button>
               <div class="bottom" @click="changeScene">
                 <p>微信扫码登录</p>
                 <svg
@@ -128,6 +132,8 @@ import useUserStore from "@/store/modules/user";
 import { ref, reactive, computed } from "vue";
 let userStore = useUserStore();
 let scene = ref<number>(0); //0代表手机号登录，1代表扫码登录
+let flag=ref<boolean>(false)
+let time = ref<number>(5);
 let loginParams = reactive({
   phone: "",
   code: "",
@@ -142,6 +148,14 @@ const changeScene = () => {
   scene.value === 0 ? (scene.value = 1) : (scene.value = 0);
 };
 const getCode = async () => {
+  flag.value=true;
+  setInterval(() => {
+    time.value--;
+    if (time.value === 0) {
+      flag.value=false;
+      time.value = 5;
+    }
+  }, 1000);
   try {
     await userStore.getCode(loginParams.phone);
     loginParams.code = userStore.code;
