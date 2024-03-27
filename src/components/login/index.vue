@@ -24,17 +24,22 @@
                 </el-form-item>
                 <el-form-item>
                   <el-button
-                    :disabled="!isPhone||flag ? true : false"
+                    :disabled="!isPhone || flag ? true : false"
                     @click="getCode"
                   >
-                  <span v-if="flag">获取验证码({{ time }})</span>
-                  <span v-else>获取验证码</span>
-                  
-                    </el-button>
+                    <span v-if="flag">获取验证码({{ time }})</span>
+                    <span v-else>获取验证码</span>
+                  </el-button>
                 </el-form-item>
               </el-form>
-              <el-button type="primary" style="width: 100%" size="default"
-                >登录
+              <el-button
+                type="primary"
+                style="width: 100%"
+                size="default"
+                @click="login"
+                :disabled="!isPhone || loginParams.code.length<6 ? true : false"
+              >
+                登录
               </el-button>
               <div class="bottom" @click="changeScene">
                 <p>微信扫码登录</p>
@@ -130,29 +135,16 @@
 import { User, Lock } from "@element-plus/icons-vue";
 import useUserStore from "@/store/modules/user";
 import { ref, reactive, computed } from "vue";
+import { ElMessage } from 'element-plus';
 let userStore = useUserStore();
-let scene = ref<number>(0); //0代表手机号登录，1代表扫码登录
-let flag=ref<boolean>(false)
 let time = ref<number>(5);
-let loginParams = reactive({
-  phone: "",
-  code: "",
-});
-//判断当前元素是否为手机号
-let isPhone = computed(() => {
-  const req =
-    /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
-  return req.test(loginParams.phone);
-});
-const changeScene = () => {
-  scene.value === 0 ? (scene.value = 1) : (scene.value = 0);
-};
-const getCode = async () => {
-  flag.value=true;
+let flag = ref<boolean>(false);
+  const getCode = async () => {
+  flag.value = true;
   setInterval(() => {
     time.value--;
     if (time.value === 0) {
-      flag.value=false;
+      flag.value = false;
       time.value = 5;
     }
   }, 1000);
@@ -163,6 +155,35 @@ const getCode = async () => {
     console.log(error);
   }
 };
+
+let loginParams = reactive({
+  phone: "",
+  code: "",
+});
+//判断当前元素是否为手机号
+let isPhone = computed(() => {
+  const req =
+    /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
+  return req.test(loginParams.phone);
+});
+let scene = ref<number>(0); //0代表手机号登录，1代表扫码登录
+const changeScene = () => {
+  scene.value === 0 ? (scene.value = 1) : (scene.value = 0);
+};
+//点击登录
+const login = async () => {
+  try {
+    //登录成功
+    await userStore.userLogin(loginParams);
+    userStore.visiable = false;
+  } catch (error) {
+    ElMessage({
+      type:'error',
+      message:(error as Error).message
+    })
+  }
+};
+
 </script>
 
 <script lang="ts">
