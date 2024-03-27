@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia'
 import { reqHospitalDetail,reqHospitalDepartment } from '@/api/hospital';
-import { HosPitalDetail,DeparmentResponseData,DepartmentArr } from '@/api/hospital/type';
+import { HosPitalDetail,DeparmentResponseData } from '@/api/hospital/type';
 import type { DetailState } from './interface';
 const useDetailStore = defineStore('Detail',{
     state:():DetailState=>{
@@ -26,6 +26,9 @@ const useDetailStore = defineStore('Detail',{
               
             }
         }
+    },
+    persist:{
+        enabled:true
     },
     getters:{
 
