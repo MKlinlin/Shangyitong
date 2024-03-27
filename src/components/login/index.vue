@@ -1,6 +1,6 @@
 <template>
   <div class="login_container">
-    <el-dialog v-model="userStore.visiable" title="用户登录">
+    <el-dialog v-model="userStore.visiable" title="用户登录" @close="close">
       <!-- 对话框结构 -->
       <el-row>
         <!-- 左侧结构:登录，微信扫一扫 -->
@@ -212,6 +212,12 @@ const rule = {
   phone: [{ trigger: "change", validator: validatorPhone }],
   code: [{ trigger: "change", validator: validatorCode }],
 };
+const close =()=>{
+  //关闭对话框时清空数据
+  Object.assign(loginParams,{phone:'', code:''})
+  //清除上一次校验的结果
+  form.value.resetFields()
+}
 </script>
 
 <script lang="ts">
