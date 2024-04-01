@@ -32,6 +32,10 @@ export default createRouter({
                 {
                     path: 'notice',
                     component:()=>import('../pages/hospital/notice/index.vue')
+                },
+                {
+                    path: 'register_1',
+                    component:()=>import('../pages/hospital/register/register_1.vue')
                 }
             ]
         },

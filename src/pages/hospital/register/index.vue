@@ -87,7 +87,7 @@
           <h1 class="cur">{{ department.depname }}</h1>
           <!-- 每一个大科室下的小科室 -->
           <ul>
-            <li @click="showLogin" v-for="item in department.children" :key="item.depcode">
+            <li @click="showLogin(item)" v-for="item in department.children" :key="item.depcode">
               {{ item.depname }}
             </li>
           </ul>
@@ -99,13 +99,13 @@
 
 <script setup lang="ts">
 import useDetailStore from "@/store/modules/hospitalDetail";
-import useUserStore from "@/store/modules/user";
+import { useRouter,useRoute } from "vue-router";
 import { ref } from "vue";
 let hospitalStore = useDetailStore();
 let currentIndex = ref<number>(0);
 
-let userStore = useUserStore();
-
+let $router=useRouter()
+let $route=useRoute()
 const changeIndex = (index: number) => {
   currentIndex.value = index;
   //点击导航获取右侧科室标题
@@ -118,13 +118,10 @@ const changeIndex = (index: number) => {
   )
 };
 
-const showLogin = () => {
-  
-  if (userStore.visiable) {
-    userStore.visiable = false;
-  }else {
-    userStore.visiable = true;
-  }
+const showLogin = (item:any) => {
+  //点击某一个医院科室，跳转到响应的挂号详情页面
+  $router.push({path:'/hospital/register_1',query:{hoscode:$route.query.hoscode,depcode:item.depcode,}})
+
 };
 </script>
 
