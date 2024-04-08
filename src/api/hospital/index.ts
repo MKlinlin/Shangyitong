@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import type { HosPitalDetail,DeparmentResponseData,LoginData,UserLoginResponseData } from './type'
+import type { HosPitalDetail,DeparmentResponseData,LoginData,UserLoginResponseData, HospitalWordData } from './type'
 enum API {
     HOSPITALDETAIL_URL = '/hosp/hospital/',
     //获取某个医院的科室数据
@@ -8,6 +8,8 @@ enum API {
     GETUSERCODE_URL = '/sms/send/',
     //用户登录
     USERLOGIN_URL = '/user/login',
+    //获取医院科室预约挂号数据
+    HOSPITALWORK_URL = '/hosp/hospital/auth/getBookingScheduleRule/',
 }
 
 // 获取医院详情的接口
@@ -21,3 +23,6 @@ export const reqCode = (phone: string) => request.get<any, string>(API.GETUSERCO
 
 // 用户登录接口
 export const reqLogin = (data: LoginData) => request.post<any, UserLoginResponseData>(API.USERLOGIN_URL, data);
+
+// 获取医院科室预约挂号数据
+export const reqHospitalWork = (page:number,limit:number,hoscode:string,depcode:string) => request.get<any, HospitalWordData>(API.HOSPITALWORK_URL + page + '/' + limit + '/' + hoscode + '/' + depcode);
