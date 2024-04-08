@@ -3,6 +3,7 @@
 //      2.可以在请求头中携带公共参数：token等
 //     3.可以简化服务器返回的数据，处理http网络错误
 import axios from 'axios'
+import useUserStore from '@/store/modules/user'
 import { ElMessage } from 'element-plus'
 
 //利用axios.create创建一个axios实例，可以设置基础路径、超时时间等
@@ -16,6 +17,11 @@ request.interceptors.request.use(
     config=>{
         //可以在请求头中携带公共参数：token等
         //...
+        let userStore = useUserStore()
+        //token:公共参数，若登录则需要携带
+        if(userStore.userInfo.token){
+            config.headers.token = userStore.userInfo.token
+        }
         return config
     },
 )
