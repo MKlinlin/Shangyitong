@@ -14,9 +14,10 @@
       <div class="container">
         <div
           class="item"
-          :class="{ active: item.status == -1 || item.availableNumber == -1 }"
+          :class="{ active: item.status == -1 || item.availableNumber == -1 ,cur:item.workDate==workTime.workDate}"
           v-for="item in workData.bookingScheduleList"
           :key="item"
+          @click="changeTime(item)"
         >
           <div class="above">{{ item.workDate }}-{{ item.dayOfWeek }}</div>
           <div class="bottom">
@@ -41,12 +42,12 @@
     </div>
     <div class="below">
       <!-- 展示放号时间 -->
-      <div class="will">
+      <div class="will" v-if="workTime.status==1">
         <span class="time">2024.8.6</span>
         <span>放号</span>
       </div>
       <!-- 展示医生结构：上午，下午 -->
-      <div class="doc">
+      <div class="doc" v-else>
         <div class="am">
           <div class="icon">
             <svg
@@ -72,38 +73,23 @@
             </svg>
             <span style="color: #7f7f7f; font-weight: 700">上午号源</span>
           </div>
-          <div class="docInfo">
+          <div class="docInfo" v-for="doctor in amArr" :key="doctor.id">
             <div class="left">
               <div class="info">
-                <span>副主任医师</span>
+                <span>{{doctor.title}}</span>
                 <span>|</span>
-                <span>张三</span>
+                <span>{{doctor.docname}}</span>
               </div>
-              <div class="skills">python,java,js</div>
+              <div class="skills">{{doctor.skill}}</div>
             </div>
             <div class="right">
-              <div class="money">￥100</div>
-              <el-button type="primary" size="default">100</el-button>
+              <div class="money">{{doctor.amount}}</div>
+              <el-button type="primary" size="default">{{doctor.availableNumber}}</el-button>
             </div>
           </div>
-          <div class="docInfo">
-            <div class="left">
-              <div class="info">
-                <span>副主任医师</span>
-                <span>|</span>
-                <span>张三</span>
-              </div>
-              <div class="skills">
-                这个 css 属性设置元素左下角的圆角。圆角可以是圆或椭圆
-              </div>
-            </div>
-            <div class="right">
-              <div class="money">￥100</div>
-              <el-button type="primary" size="default">100</el-button>
-            </div>
-          </div>
+          
         </div>
-        <div class="pm">
+        <div class="pm" v-for="doctor in pmArr" :key="doctor.id">
           <div class="icon">
             <svg
               t="1712567142093"
@@ -141,33 +127,18 @@
           <div class="docInfo">
             <div class="left">
               <div class="info">
-                <span>副主任医师</span>
+                <span>{{doctor.title}}</span>
                 <span>|</span>
-                <span>张三</span>
+                <span>{{doctor.docname}}</span>
               </div>
-              <div class="skills">python,java,js</div>
+              <div class="skills">{{doctor.skill}}</div>
             </div>
             <div class="right">
-              <div class="money">￥100</div>
-              <el-button type="primary" size="default">100</el-button>
+              <div class="money">{{doctor.amount}}</div>
+              <el-button type="primary" size="default">{{doctor.availableNumber}}</el-button>
             </div>
           </div>
-          <div class="docInfo">
-            <div class="left">
-              <div class="info">
-                <span>副主任医师</span>
-                <span>|</span>
-                <span>张三</span>
-              </div>
-              <div class="skills">
-                这个 css 属性设置元素左下角的圆角。圆角可以是圆或椭圆
-              </div>
-            </div>
-            <div class="right">
-              <div class="money">￥100</div>
-              <el-button type="primary" size="default">100</el-button>
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>
@@ -175,18 +146,21 @@
 </template>
 
 <script setup lang='ts'>
-import { onMounted, ref } from "vue";
-import { reqHospitalWork } from "@/api/hospital";
-import type { HospitalWordData } from "@/api/hospital/type";
+import { onMounted, ref,computed } from "vue";
+import { reqHospitalWork,reqHospitalDoctor } from "@/api/hospital";
+import type { HospitalWordData,DoctorResponseData,DocArr,Doctor } from "@/api/hospital/type";
 import { useRoute } from "vue-router";
 
 let $route = useRoute();
 onMounted(() => {
   fetchWorkData();
+  getDoctorWorkData();
 });
 let pageNo = ref<number>(1);
 let limit = ref<number>(6);
 let workData = ref<any>({});
+//存储排班日期：当前数据的第一个
+let workTime = ref<any>({});
 const fetchWorkData = async () => {
   let res: HospitalWordData = await reqHospitalWork(
     pageNo.value,
@@ -197,8 +171,39 @@ const fetchWorkData = async () => {
   console.log(res);
   if (res.code === 200) {
     workData.value = res.data;
+    //存储第一天的数据
+    workTime.value = res.data.bookingScheduleList[0];
+    console.log(workTime.value);
   }
 };
+let docArr=ref<DocArr>([]);
+//获取医生信息
+const getDoctorWorkData=async ()=>{
+  let hoscode=String($route.query.hoscode);
+  let depcode=String($route.query.depcode);
+  let workDate=workTime.value.workDate;
+  let res:DoctorResponseData =  await reqHospitalDoctor(hoscode,depcode,workDate);
+  if(res.code===200){
+    docArr.value=res.data;
+  }
+}
+
+//点击顶部某一天的时候触发
+const changeTime=(item:any)=>{
+  workTime.value=item;
+  getDoctorWorkData();
+}
+
+let amArr=computed(()=>{
+  return docArr.value.filter((doc:Doctor)=>{
+    return doc.workTime===0;
+  });
+})
+let pmArr=computed(()=>{
+  return docArr.value.filter((doc:Doctor)=>{
+    return doc.workTime===1;
+  });
+})
 </script>
 
 <style scoped lang="scss">
@@ -232,12 +237,16 @@ const fetchWorkData = async () => {
         display: flex;
         flex-direction: column;
         align-items: center;
+        transition: all .5s;
         &.active {
           border: 1px solid #7f7f7f;
           color: #7f7f7f;
           .above {
             background-color: #f5f5f5;
           }
+        }
+        &.cur{
+          transform: scale(1.1);
         }
       }
       .above {
@@ -246,6 +255,7 @@ const fetchWorkData = async () => {
         width: 100%;
         text-align: center;
       }
+     
       .bottom {
         height: 40px;
         display: flex;
